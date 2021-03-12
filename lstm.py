@@ -70,6 +70,8 @@ class LSTM(nn.Module):
             y, h = l(x, h, image_emb)
             ys.append(y)
         y = torch.cat(ys, 0)
+        if self.batch_first:
+            y = y.permute(1, 0, 2)
         return y, h
 
     def forward(self, x, hiddens, image_emb=None):
@@ -103,8 +105,6 @@ class LSTM(nn.Module):
 
         h = torch.cat(new_hs, 0)
         c = torch.cat(new_cs, 0)
-        if self.batch_first:
-            x = x.permute(1, 0, 2)
         return x, (h, c)
 
 class CLN(nn.Module):
